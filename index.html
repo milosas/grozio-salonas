@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMRÉ | Grožio Salonas</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- n8n Chat -->
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --color-cream: #FAF7F2;
+            --color-gold: #C9A962;
+            --color-gold-light: #E8D5A3;
+            --color-rose: #D4A5A5;
+            --color-deep: #2C2420;
+            --color-warm: #8B7355;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-cream);
+            color: var(--color-deep);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Grain Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--color-cream) 0%, transparent 100%);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(250, 247, 242, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 4rem;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            color: var(--color-deep);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-warm);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--color-gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-deep);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 4rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            animation: fadeUp 1.2s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 2rem;
+            animation: fadeUp 1.2s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            animation: fadeUp 1.2s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--color-gold);
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--color-warm);
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            animation: fadeUp 1.2s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            border: 1px solid var(--color-deep);
+            background: transparent;
+            color: var(--color-deep);
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: fadeUp 1.2s ease 0.8s forwards;
+            opacity: 0;
+        }
+
+        .cta-btn:hover {
+            background: var(--color-deep);
+            color: var(--color-cream);
+        }
+
+        /* Decorative Elements */
+        .hero-deco {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--color-gold-light);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: rotate 30s linear infinite;
+        }
+
+        .hero-deco:nth-child(1) {
+            top: 10%;
+            right: 10%;
+        }
+
+        .hero-deco:nth-child(2) {
+            bottom: 15%;
+            left: 5%;
+            width: 200px;
+            height: 200px;
+            animation-direction: reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Services Section */
+        .services {
+            padding: 8rem 4rem;
+            background: linear-gradient(180deg, var(--color-cream) 0%, #F5F0E8 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            padding: 3rem 2rem;
+            background: var(--color-cream);
+            border: 1px solid rgba(201, 169, 98, 0.2);
+            text-align: center;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-gold-light) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(44, 36, 32, 0.1);
+        }
+
+        .service-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .service-card p {
+            font-size: 0.85rem;
+            color: var(--color-warm);
+            font-weight: 300;
+            position: relative;
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .about-image {
+            position: relative;
+            height: 600px;
+        }
+
+        .about-image-main {
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-rose) 0%, var(--color-gold-light) 100%);
+            position: relative;
+        }
+
+        .about-image-frame {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            right: -2rem;
+            bottom: -2rem;
+            border: 1px solid var(--color-gold);
+        }
+
+        .about-content {
+            padding: 2rem 0;
+        }
+
+        .about-content .section-tag {
+            text-align: left;
+        }
+
+        .about-content h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }
+
+        .about-content p {
+            font-size: 0.95rem;
+            color: var(--color-warm);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .signature {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--color-gold);
+            margin-top: 2rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 4rem;
+            background: var(--color-deep);
+            color: var(--color-cream);
+            text-align: center;
+        }
+
+        .contact .section-title {
+            color: var(--color-cream);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 6rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item h4 {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 1rem;
+        }
+
+        .contact-item p {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 300;
+        }
+
+        .contact-item a {
+            color: var(--color-cream);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--color-gold);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4rem;
+            background: var(--color-deep);
+            border-top: 1px solid rgba(201, 169, 98, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--color-warm);
+            font-size: 0.75rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: var(--color-warm);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            letter-spacing: 0.1em;
+        }
+
+        .social-links a:hover {
+            color: var(--color-gold);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* n8n Chat Customization */
+        :root {
+            --chat--color-primary: #C9A962;
+            --chat--color-primary-shade-50: #E8D5A3;
+            --chat--color-primary-shade-100: #B8964A;
+            --chat--color-secondary: #2C2420;
+            --chat--color-secondary-shade-50: #4A3F38;
+            --chat--color-white: #FAF7F2;
+            --chat--color-light: #F5F0E8;
+            --chat--color-light-shade-50: #EBE4D8;
+            --chat--color-medium: #8B7355;
+            --chat--color-dark: #2C2420;
+            --chat--color-disabled: #D4A5A5;
+            --chat--color-typing: #8B7355;
+            --chat--border-radius: 0;
+            --chat--window--width: 400px;
+            --chat--window--height: 600px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            nav {
+                padding: 1rem 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 0 2rem;
+            }
+
+            .services {
+                padding: 4rem 2rem;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                padding: 4rem 2rem;
+                gap: 3rem;
+            }
+
+            .about-image {
+                height: 400px;
+            }
+
+            .contact {
+                padding: 4rem 2rem;
+            }
+
+            .contact-info {
+                gap: 3rem;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">AMRÉ</a>
+        <ul class="nav-links">
+            <li><a href="#paslaugos">Paslaugos</a></li>
+            <li><a href="#apie">Apie mus</a></li>
+            <li><a href="#kontaktai">Kontaktai</a></li>
+        </ul>
+    </nav>
+
+    <!-- Decorative Elements -->
+    <div class="hero-deco"></div>
+    <div class="hero-deco"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-tag">Grožio Salonas Vilniuje</p>
+            <h1>Kur <em>grožis</em><br>susitinka su <em>menu</em></h1>
+            <p class="hero-desc">Išskirtinės grožio paslaugos rafinuotoje aplinkoje. Kiekvienas apsilankymas — tai kelionė į tobulumą.</p>
+            <a href="#kontaktai" class="cta-btn">Rezervuoti vizitą</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="paslaugos">
+        <div class="section-header reveal">
+            <p class="section-tag">Mūsų paslaugos</p>
+            <h2 class="section-title">Grožio ritualai</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <span class="service-icon">✦</span>
+                <h3>Plaukų stilistika</h3>
+                <p>Kirpimas, dažymas, procedūros. Individualus požiūris į kiekvieno kliento stilių ir pageidavimus.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">◇</span>
+                <h3>Veido procedūros</h3>
+                <p>Prabangios odos priežiūros procedūros su aukščiausios kokybės produktais jūsų odos atjaunėjimui.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">○</span>
+                <h3>Makiažas</h3>
+                <p>Profesionalus makiažas proginėms ir kasdienėms progoms. Akcentuojame jūsų natūralų grožį.</p>
+            </div>
+            <div class="service-card reveal">
+                <span class="service-icon">△</span>
+                <h3>Nagų dizainas</h3>
+                <p>Manikiūras ir pedikiūras su dėmesiu detalėms. Šiuolaikinės technikos ir unikalūs dizainai.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="apie">
+        <div class="about-image reveal">
+            <div class="about-image-main"></div>
+            <div class="about-image-frame"></div>
+        </div>
+        <div class="about-content reveal">
+            <p class="section-tag">Apie mus</p>
+            <h2>Daugiau nei salonas —<br>tai patyrimas</h2>
+            <p>AMRÉ gimė iš aistros grožiui ir tikėjimo, kad kiekvienas nusipelno jaustis išskirtinai. Mūsų komanda — tai profesionalai, kurių rankose susijungia menas ir meistriškumas.</p>
+            <p>Sukūrėme erdvę, kurioje laikas sustoja, o jūs galite visiškai atsipalaiduoti ir pasimėgauti grožio ritualais, sukurtais specialiai jums.</p>
+            <p class="signature">— AMRÉ komanda</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="kontaktai">
+        <div class="section-header">
+            <p class="section-tag">Susisiekite</p>
+            <h2 class="section-title">Laukiame jūsų</h2>
+        </div>
+        <div class="contact-info">
+            <div class="contact-item">
+                <h4>Adresas</h4>
+                <p>Gedimino pr. 1<br>Vilnius, Lietuva</p>
+            </div>
+            <div class="contact-item">
+                <h4>Telefonas</h4>
+                <p><a href="tel:+37060000000">+370 600 00 000</a></p>
+            </div>
+            <div class="contact-item">
+                <h4>El. paštas</h4>
+                <p><a href="mailto:info@amre.lt">info@amre.lt</a></p>
+            </div>
+            <div class="contact-item">
+                <h4>Darbo laikas</h4>
+                <p>Pr–Št: 9:00–20:00<br>Sk: Uždaryta</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 AMRÉ. Visos teisės saugomos.</p>
+        <div class="social-links">
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+        </div>
+    </footer>
+
+    <!-- n8n Chat Integration -->
+    <script type="module">
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+        createChat({
+            webhookUrl: 'https://n8n.srv1018225.hstgr.cloud/webhook/mFUpedcqlec5Czx9',
+            initialMessages: [
+                'Sveiki! 👋 Esu AMRÉ asistentė.',
+                'Kaip galiu jums padėti šiandien? Galiu padėti rezervuoti vizitą, atsakyti į klausimus apie paslaugas ar kainas.'
+            ],
+            i18n: {
+                lt: {
+                    title: 'AMRÉ Asistentė',
+                    subtitle: 'Pasikalbėkime apie grožį ✨',
+                    footer: '',
+                    getStarted: 'Pradėti pokalbį',
+                    inputPlaceholder: 'Rašykite žinutę...',
+                },
+            },
+            mode: 'window',
+            showWelcomeScreen: true,
+        });
+    </script>
+
+    <!-- Scroll Animations -->
+    <script>
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Reveal on scroll
+        const reveals = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (elementTop < windowHeight - revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+    </script>
+</body>
+</html>
