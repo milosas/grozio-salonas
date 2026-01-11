@@ -648,17 +648,27 @@
                 'Kaip galiu jums padėti šiandien? Galiu padėti rezervuoti vizitą, atsakyti į klausimus apie paslaugas ar kainas.'
             ],
             i18n: {
-                lt: {
+                en: {
                     title: 'AMRÉ Asistentė',
                     subtitle: 'Pasikalbėkime apie grožį ✨',
                     footer: '',
                     getStarted: 'Pradėti pokalbį',
                     inputPlaceholder: 'Rašykite žinutę...',
+                    closeButtonTooltip: 'Uždaryti pokalbį',
                 },
             },
             mode: 'window',
-            showWelcomeScreen: true,
+            showWelcomeScreen: false,
+            defaultLanguage: 'en',
         });
+
+        // Automatiškai atidaryti chat langą po puslapio užkrovimo
+        setTimeout(() => {
+            const chatToggle = document.querySelector('[data-chat-toggle]') ||
+                              document.querySelector('.n8n-chat-toggle') ||
+                              document.querySelector('[class*="chat"] button');
+            if (chatToggle) chatToggle.click();
+        }, 1000);
     </script>
 
     <!-- Scroll Animations -->
