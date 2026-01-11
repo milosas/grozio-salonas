@@ -57,10 +57,42 @@
             z-index: 1000;
         }
 
+        /* Top Banner */
+        .top-banner {
+            background: #000;
+            padding: 0.6rem 1rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 101;
+        }
+
+        .top-banner a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .top-banner a:hover {
+            opacity: 0.7;
+        }
+
+        .top-banner img {
+            height: 1.75rem;
+            filter: invert(1);
+        }
+
         /* Navigation */
         nav {
             position: fixed;
-            top: 0;
+            top: 38px;
             left: 0;
             right: 0;
             padding: 1.5rem 4rem;
@@ -543,6 +575,14 @@
     </style>
 </head>
 <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <a href="http://www.blingo.lt" target="_blank" rel="noopener noreferrer">
+            <span>Sukurta kartu su</span>
+            <img src="https://ai-treneris.vercel.app/blingo-logo.png" alt="BlinGO Agency">
+        </a>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <a href="#" class="logo">AMRÉ</a>
