@@ -263,9 +263,9 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 3rem;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -488,19 +488,10 @@
             --chat--window--height: 600px;
         }
 
-        /* Paslėpti "Powered by n8n" */
-        .n8n-chat .chat-footer,
-        .n8n-chat footer,
-        .n8n-chat [class*="footer"],
-        .n8n-chat [class*="Footer"],
-        .n8n-chat a[href*="n8n"],
-        [class*="chat"] [class*="powered"],
-        [class*="chat"] [class*="Powered"],
-        [class*="chat"] a[href*="n8n.io"] {
+        /* Paslėpti "Powered by n8n" - tik tekstą, ne input */
+        .n8n-chat a[href*="n8n.io"],
+        .n8n-chat a[href*="n8n.cloud"] {
             display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            overflow: hidden !important;
         }
 
         /* Responsive */
@@ -519,6 +510,10 @@
 
             .services {
                 padding: 4rem 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
             }
 
             .about {
