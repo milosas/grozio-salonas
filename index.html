@@ -488,6 +488,21 @@
             --chat--window--height: 600px;
         }
 
+        /* Paslėpti "Powered by n8n" */
+        .n8n-chat .chat-footer,
+        .n8n-chat footer,
+        .n8n-chat [class*="footer"],
+        .n8n-chat [class*="Footer"],
+        .n8n-chat a[href*="n8n"],
+        [class*="chat"] [class*="powered"],
+        [class*="chat"] [class*="Powered"],
+        [class*="chat"] a[href*="n8n.io"] {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
+
         /* Responsive */
         @media (max-width: 968px) {
             nav {
@@ -553,7 +568,7 @@
             <p class="hero-tag">Grožio Salonas Vilniuje</p>
             <h1>Kur <em>grožis</em><br>susitinka su <em>menu</em></h1>
             <p class="hero-desc">Išskirtinės grožio paslaugos rafinuotoje aplinkoje. Kiekvienas apsilankymas — tai kelionė į tobulumą.</p>
-            <a href="#kontaktai" class="cta-btn">Rezervuoti vizitą</a>
+            <a href="#" class="cta-btn" onclick="openChatWithMessage('Norėčiau rezervuoti vizitą'); return false;">Rezervuoti vizitą</a>
         </div>
     </section>
 
@@ -641,7 +656,7 @@
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-        createChat({
+        const chat = createChat({
             webhookUrl: 'https://n8n.srv1018225.hstgr.cloud/workflow/mFUpedcqlec5Czx9',
             initialMessages: [
                 'Sveiki! 👋 Esu AMRÉ asistentė.',
@@ -660,12 +675,35 @@
             mode: 'window',
             showWelcomeScreen: false,
             defaultLanguage: 'en',
+            metadata: {},
         });
+
+        // Funkcija atidaryti chat ir siųsti žinutę
+        window.openChatWithMessage = function(message) {
+            // Atidaryti chat langą
+            const toggleBtn = document.querySelector('.n8n-chat button') ||
+                             document.querySelector('[class*="chat"] button');
+            if (toggleBtn) {
+                toggleBtn.click();
+                // Palaukti kol atsidarys ir įvesti žinutę
+                setTimeout(() => {
+                    const input = document.querySelector('.n8n-chat textarea') ||
+                                 document.querySelector('.n8n-chat input[type="text"]');
+                    if (input && message) {
+                        input.value = message;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        // Paspausti send mygtuką
+                        const sendBtn = document.querySelector('.n8n-chat button[type="submit"]') ||
+                                       document.querySelector('.n8n-chat form button');
+                        if (sendBtn) sendBtn.click();
+                    }
+                }, 500);
+            }
+        };
 
         // Automatiškai atidaryti chat langą po puslapio užkrovimo
         setTimeout(() => {
-            const chatToggle = document.querySelector('[data-chat-toggle]') ||
-                              document.querySelector('.n8n-chat-toggle') ||
+            const chatToggle = document.querySelector('.n8n-chat button') ||
                               document.querySelector('[class*="chat"] button');
             if (chatToggle) chatToggle.click();
         }, 1000);
