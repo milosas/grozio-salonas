@@ -656,7 +656,7 @@
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-        const chat = createChat({
+        const chatInstance = createChat({
             webhookUrl: 'https://n8n.srv1018225.hstgr.cloud/workflow/mFUpedcqlec5Czx9',
             initialMessages: [
                 'Sveiki! 👋 Esu AMRÉ asistentė.',
@@ -673,40 +673,78 @@
                 },
             },
             mode: 'window',
-            showWelcomeScreen: false,
+            showWelcomeScreen: true,
             defaultLanguage: 'en',
-            metadata: {},
         });
 
-        // Funkcija atidaryti chat ir siųsti žinutę
-        window.openChatWithMessage = function(message) {
+        // Išsaugoti chat instance globaliai
+        window.n8nChat = chatInstance;
+
+        // Automatiškai atidaryti chat ir paspausti "Pradėti pokalbį" po užkrovimo
+        setTimeout(() => {
             // Atidaryti chat langą
-            const toggleBtn = document.querySelector('.n8n-chat button') ||
-                             document.querySelector('[class*="chat"] button');
+            if (chatInstance && chatInstance.open) {
+                chatInstance.open();
+            } else {
+                const toggleBtn = document.querySelector('.n8n-chat button');
+                if (toggleBtn) toggleBtn.click();
+            }
+
+            // Paspausti "Pradėti pokalbį" mygtuką
+            setTimeout(() => {
+                const startBtn = document.querySelector('.n8n-chat button.chat-get-started-button') ||
+                                document.querySelector('.n8n-chat [class*="GetStarted"] button') ||
+                                document.querySelector('.n8n-chat button:not([class*="close"])');
+                if (startBtn && startBtn.textContent.includes('Pradėti')) {
+                    startBtn.click();
+                }
+            }, 500);
+        }, 800);
+    </script>
+
+    <!-- Rezervuoti vizitą funkcija (atskiras script be module) -->
+    <script>
+        function openChatWithMessage(message) {
+            // Atidaryti chat jei uždarytas
+            const toggleBtn = document.querySelector('.n8n-chat button');
             if (toggleBtn) {
                 toggleBtn.click();
-                // Palaukti kol atsidarys ir įvesti žinutę
+            }
+
+            // Palaukti ir įvesti žinutę
+            setTimeout(() => {
+                // Pirma paspausti "Pradėti pokalbį" jei rodomas
+                const startBtn = document.querySelector('.n8n-chat button.chat-get-started-button') ||
+                                Array.from(document.querySelectorAll('.n8n-chat button')).find(b => b.textContent.includes('Pradėti'));
+                if (startBtn) {
+                    startBtn.click();
+                }
+
+                // Tada įvesti žinutę
                 setTimeout(() => {
                     const input = document.querySelector('.n8n-chat textarea') ||
-                                 document.querySelector('.n8n-chat input[type="text"]');
-                    if (input && message) {
+                                 document.querySelector('.n8n-chat input[type="text"]') ||
+                                 document.querySelector('.n8n-chat input');
+                    if (input) {
+                        input.focus();
                         input.value = message;
                         input.dispatchEvent(new Event('input', { bubbles: true }));
-                        // Paspausti send mygtuką
-                        const sendBtn = document.querySelector('.n8n-chat button[type="submit"]') ||
-                                       document.querySelector('.n8n-chat form button');
-                        if (sendBtn) sendBtn.click();
-                    }
-                }, 500);
-            }
-        };
 
-        // Automatiškai atidaryti chat langą po puslapio užkrovimo
-        setTimeout(() => {
-            const chatToggle = document.querySelector('.n8n-chat button') ||
-                              document.querySelector('[class*="chat"] button');
-            if (chatToggle) chatToggle.click();
-        }, 1000);
+                        // Siųsti žinutę
+                        setTimeout(() => {
+                            const form = input.closest('form');
+                            if (form) {
+                                form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                            } else {
+                                const sendBtn = document.querySelector('.n8n-chat button[type="submit"]') ||
+                                               document.querySelector('.n8n-chat form button');
+                                if (sendBtn) sendBtn.click();
+                            }
+                        }, 100);
+                    }
+                }, 600);
+            }, 300);
+        }
     </script>
 
     <!-- Scroll Animations -->
